@@ -35,4 +35,6 @@ Reload the program using the above command if you would like to change n. To con
 
 F=fund_domain([1,2,3,4,5,6.1]); F
 
-F is a Sage polyhedron object representing a fundamental Dirichlet domain.
+F is a Sage polyhedron object representing a fundamental Dirichlet domain. Refer to the Sage documentation for the many available options for handling polyhedra:
+
+http://doc.sagemath.org/html/en/reference/geometry/sage/geometry/polyhedron/constructor.html
