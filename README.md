@@ -4,6 +4,7 @@ Sage code for computing Dirichlet fundamental domains and domain decompositions 
 REQUIRED SOFTWARE:
 
 Sage - http://www.sagemath.org/
+
 lrslib - http://cgm.cs.mcgill.ca/~avis/C/lrs.html
 
 SETUP:
