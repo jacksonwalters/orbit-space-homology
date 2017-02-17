@@ -33,7 +33,7 @@ n = your desired number of vertices
 
 Reload the program using the above command if you would like to change n. To construct a fundamental domain (for n=4) centered at the distinct vector l=[1,2,3,4,5,6.1], simply enter
 
-F=fund_domain([1,2,3,4,5,6.1]); F
+F=fund_domain([1,2,3,4,5,6.1])[1]; F
 
 F is a Sage polyhedron object representing a fundamental Dirichlet domain. Refer to the Sage documentation for the many available options for handling polyhedra:
 
