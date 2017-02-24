@@ -19,16 +19,16 @@ def embed_gens(n): return [embed(gen,n) for gen in SymmetricGroup(n).gens()]
 
 G = PermutationGroup(embed_gens(n))
 
-#fundamental domain given arbitrary distinct vector l
-def fund_domain(l=[i for i in range(N)],br=QQ):
+#fundamental domain given arbitrary distinct vector l and basis B
+def fund_domain(l=[i for i in range(N)],B=identity_matrix(N),br=QQ):
 
 	#augmented matrix for half-plane ineqs
-	A = [ [l[(j+1)-1] - l[G[i](j+1)-1] for j in range(N)] for i in range(G.order())]
+	A = [ [l[j] - act_vect(G[i],vector(l),B)[j] for j in range(N)] for i in range(G.order())]
 	b_1 = [0 for i in range(G.order())]
 	bA = matrix(QQ,b_1).transpose().augment(matrix(QQ,A))
 
 	#augmented matrix for positivity ineqs
-	pos = identity_matrix(QQ,N)
+	pos = B.inverse().transpose()
 	b_2 = [0 for i in range(N)]
 	bPos = matrix(QQ,b_2).transpose().augment(pos)
 
@@ -39,6 +39,7 @@ def fund_domain(l=[i for i in range(N)],br=QQ):
 	poly = Polyhedron(ieqs=aug_l,base_ring=br)
 	
 	return([aug_l,poly])
+
 	
 #translation decomposition of fundamental domain F_l at x	
 def fund_decomp(x,l=[i for i in range(N)],br=QQ):
@@ -109,7 +110,19 @@ def compare_domains(F_1,F_2):
 	#number of planes in H-rep
 	print('#H-rep: \n #F_1=%r \n #F_2=%r' % (F_1.n_Hrepresentation(),F_2.n_Hrepresentation()))
 	
+#compute gradient matrix for \Sigma_n -> \Sigma_N
+def grad_mat():
+	A=[[0 for j in range(N)] for i in range(N)]
 	
+	for i in range(1,N+1):
+		for j in range(1,N+1):
+			num = 0
+			for k in range(H.order()): 
+				if H[k](j)==i: num += 1
+			A[i-1][j-1] = num
+	
+	return A
+			
 
 #extract info from decomp vector
 def dim_vector(decomp): return sorted([R[0].dim() for R in decomp])
