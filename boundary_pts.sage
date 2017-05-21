@@ -22,7 +22,7 @@ def near_boundary_pt(eps,F,ind=0):
 	
 	#push boundary point distance eps in n_hat direction
 	#and take rep in F
-	p=boundary_pt(F)
+	p=boundary_pt(F,ind)
 	s_tilde=p+eps*n_hat
 	return fund_domain_rep(s_tilde,F)
 	
