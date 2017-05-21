@@ -8,12 +8,15 @@ def fund_domain_rep(x, F):
 def boundary_pt(F):
 	rays=F.faces(N-1)[0].rays()
 	return sum(vector(ray) for ray in rays)/(N-1)
-	
+
+#test if p is on the boundary of F
 def test_bndry(p,F): return F.contains(p) and not(F.interior_contains(p))
 	
 #check if p is in the interior of its boundary face
 def face_int(p,F): return F.faces(N-1)[0].as_polyhedron().relative_interior_contains(p)
 	
+#push a boundary point a distance eps in the direction normal to its
+#containing facet
 def near_boundary_pt(eps,F):
 	#obtain vector normal to subspace containing the N-1 dim. facet
 	rays=F.faces(N-1)[0].rays()
