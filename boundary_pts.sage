@@ -39,16 +39,15 @@ def face_int(p,F,ind=0): return F.faces(N-1)[ind].as_polyhedron().relative_inter
 def check_all_ints(eps,F):
 	num_facets=len(F.faces(N-1))
 	s_list=[near_boundary_pt(eps,F,i) for i in range(num_facets)]
-	F_list=[fund_domain(s)[1] for s in s_list]
+	F_list=[fund_domain(vector(s,RDF),B=identity_matrix(6),br=QQ)[1] for s in s_list]
 	R_list=[F.intersection(F_i) for F_i in F_list]
 	int_list=[[R_i.intersection(R_j) for R_j in R_list] for R_i in R_list]
-	vols=[[lrs_vol(int_list[i][j]) for j in range(len(int_list))] for i in range(len(int_list))]
 	for i in range(num_facets):
 		for j in range(num_facets):
 			avg=vector(s_list[i])+vector(s_list[j])
 			R=R_list[i].intersection(R_list[j])
-			if not R.contains(avg): return [i,j]
-	return [int_list,vols]
+			if not R.contains(avg): return [[i,j],int_list]
+	return int_list
 	
 	
 	
