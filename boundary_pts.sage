@@ -20,14 +20,35 @@ def near_boundary_pt(eps,F,ind=0):
 	n=perp.basis()[0]
 	n_hat=n/n.norm()
 	
-	#push boundary point distance eps in n_hat direction
+	#push boundary point distance eps in +-n_hat direction
 	#and take rep in F
 	p=boundary_pt(F,ind)
-	s_tilde=p+eps*n_hat
-	return fund_domain_rep(s_tilde,F)
+	s_plus=p+eps*n_hat
+	s_minus=p-eps*n_hat
+	if F.contains(s_plus): return s_plus
+	if F.contains(s_minus): return s_minus
+	print "Failed."
 	
 #test if p is on the boundary of F
 def test_bndry(p,F): return F.contains(p) and not(F.interior_contains(p))
 	
 #check if p is in the interior of its boundary face
 def face_int(p,F,ind=0): return F.faces(N-1)[ind].as_polyhedron().relative_interior_contains(p)
+
+
+def check_all_ints(eps,F):
+	num_facets=len(F.faces(N-1))
+	s_list=[near_boundary_pt(eps,F,i) for i in range(num_facets)]
+	F_list=[fund_domain(s)[1] for s in s_list]
+	R_list=[F.intersection(F_i) for F_i in F_list]
+	int_list=[[R_i.intersection(R_j) for R_j in R_list] for R_i in R_list]
+	vols=[[lrs_vol(int_list[i][j]) for j in range(len(int_list))] for i in range(len(int_list))]
+	for i in range(num_facets):
+		for j in range(num_facets):
+			avg=vector(s_list[i])+vector(s_list[j])
+			R=R_list[i].intersection(R_list[j])
+			if not R.contains(avg): return [i,j]
+	return [int_list,vols]
+	
+	
+	
