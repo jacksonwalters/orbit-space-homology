@@ -1,3 +1,5 @@
+def proc_dist(s1,s2): return min([(vector(act_vect(g,vector(s2)))-vector(s1)).norm() for g in G])
+	
 def sample_frechet_mean(s1,s2):
 	F_l=fund_domain()[1]
 	
@@ -11,14 +13,16 @@ def sample_frechet_mean(s1,s2):
 	
 	for i in range(len(orb1)):
 		for j in range(len(orb2)):
-			R = F_l.intersection(domains1[i]).intersection(domains2[j])
+			R = domains1[i].intersection(domains2[j])
 			avg=(orb1[i]+orb2[j])/2
 			if R.contains(avg): avgs.append(avg)
 	
 	max_norm = max([av.norm() for av in avgs])
 	maxes=[]
 	for av in avgs: 
-		if av.norm() == max_norm: maxes.append(tuple(av))
+		if av.norm() == max_norm: maxes.append(av)
 	
-	return [vector(s) for s in set(maxes)]
+	domain_reps=[tuple(fund_domain_rep(m,F_l)) for m in maxes]
+	
+	return [vector(s) for s in set(domain_reps)]
 	
