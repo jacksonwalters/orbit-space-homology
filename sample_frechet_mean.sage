@@ -15,5 +15,10 @@ def sample_frechet_mean(s1,s2):
 			avg=(orb1[i]+orb2[j])/2
 			if R.contains(avg): avgs.append(avg)
 	
-	return avgs
+	min_norm = min([av.norm() for av in avgs])
+	mins=[]
+	for av in avgs: 
+		if av.norm() == min_norm: mins.append(tuple(av))
+	
+	return [vector(s) for s in set(mins)]
 	
