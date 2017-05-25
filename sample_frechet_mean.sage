@@ -21,7 +21,7 @@ def sample_frechet_mean(s1,s2):
 	for i in range(q1):
 		for j in range(q2):
 			R = domains1[i].intersection(domains2[j])
-			avg=(1/2)*factorial(n)*(orb1[i]+orb2[j])
+			avg=(1/2)*(orb1[i]+orb2[j])
 			if R.contains(avg): avgs.append(avg)
 	
 	max_norm = max([av.norm() for av in avgs])
