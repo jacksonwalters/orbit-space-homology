@@ -7,8 +7,8 @@ def sample_frechet_mean(s1,s2):
 	orb1 = list(set([tuple(act_vect(g,vector(s1))) for g in G]))
 	orb2 = list(set([tuple(act_vect(g,vector(s2))) for g in G]))
 	
-	orb1 = [vector(o) for o in orb1]
-	orb2 = [vector(o) for o in orb2]
+	orb1 = [vector(o1) for o1 in orb1]
+	orb2 = [vector(o2) for o2 in orb2]
 	
 	q1=len(orb1)
 	q2=len(orb2)
@@ -21,7 +21,7 @@ def sample_frechet_mean(s1,s2):
 	for i in range(q1):
 		for j in range(q2):
 			R = domains1[i].intersection(domains2[j])
-			avg=(1/2)*factorial(n)*(orb1[i]/q1+orb2[j]/q2)
+			avg=(1/2)*factorial(n)*(orb1[i]+orb2[j])
 			if R.contains(avg): avgs.append(avg)
 	
 	max_norm = max([av.norm() for av in avgs])
