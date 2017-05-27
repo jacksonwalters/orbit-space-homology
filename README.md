@@ -26,11 +26,11 @@ The main file is 'fund_domain.sage'. Sample Frechet means can be computed using 
 
 load('fund_domain.sage')
 
-in the Sage environment. You will receive a prompt for 
+in the Sage environment. You will receive a prompt to set the global variable
 
 n = your desired number of vertices
 
-Reload the program using the above command if you would like to change n. To construct a fundamental domain (for n=4) centered at the distinct vector l=[1,2,3,4,5,6.1], simply enter
+The global variable N = n choose 2. The global variable G=\Sigma_n will then be computed as a subgroup of the permutation group \Sigma_N. To construct a fundamental domain (for n=4, N=6) centered at the distinct vector l=[1,2,3,4,5,6.1], simply enter
 
 F=fund_domain([1,2,3,4,5,6.1])[1]; F
 
