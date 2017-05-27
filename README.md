@@ -1,5 +1,5 @@
 # fund-domain-networks
-Sage code for computing Dirichlet fundamental domains and domain decompositions for the space of unlabeled networks on n vertices. 
+Sage code for computing Dirichlet fundamental domains and the empirical Frechet mean set for the space of unlabeled networks on n vertices. 
 
 REQUIRED SOFTWARE:
 
@@ -22,10 +22,9 @@ of 10.
 
 RUNTIME:
 
-The only necessary code (along with comments for each function) is contained in 'fund_decomp.sage'. To get
-started, change directories to the one containing this file. Enter the command
+The main file is 'fund_domain.sage'. To get started, change directories to the one containing this file. Enter the command
 
-load('fund_decomp.sage')
+load('fund_domain.sage')
 
 in the Sage environment. You will receive a prompt for 
 
