@@ -1,8 +1,4 @@
-#return orbit rep of x lying in F
-def fund_domain_rep(x, F):
-	orb = [act_vect(g,vector(x)) for g in G]
-	for gx in orb:
-		if F.contains(gx): return gx.list()
+load('fund_domain.sage')
 
 #return some point on the boundary of F
 def boundary_pt(F,ind=0):

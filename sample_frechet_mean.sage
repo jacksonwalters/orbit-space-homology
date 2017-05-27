@@ -1,3 +1,5 @@
+load('fund_domain.sage')
+
 #computes the sample frechet mean of two points using the formula from [JW]
 def sample_frechet_mean(s1,s2):
 	#compute a fixed reference fundamental domain
