@@ -8,6 +8,9 @@ def pairs(n): return flatten([[[i+1,j+1] for j in range(i+1,n)] for i in range(n
 #sigma acts on an unordered pair
 def act(sigma, p): return sorted([sigma(p[0]),sigma(p[1])])
 
+#sigma acts as matrix in basis B on a vector v
+def act_vect(sig,v,B=identity_matrix(N)): return (B.inverse()*sig.matrix()*B)*v
+
 #permutation in Sigma_N which induced from perm in Sigma_n
 def embed(sigma,n): return perm_from_sort([act(sigma,p) for p in pairs(n)])
 

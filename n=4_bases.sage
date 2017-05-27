@@ -25,11 +25,8 @@ l_bar_3=vector([-(1/sqrt(6)),-(1/sqrt(6)),(1/sqrt(6)),-(1/sqrt(6)),(1/sqrt(6)),(
 subO_3=matrix([l_bar_1,l_bar_2,l_bar_3]).transpose()
 
 #basis for whole space
-B=matrix([v_b,h1,h2,l1,l2,l3]).transpose()
-O=matrix([v_o,h_bar_1,h_bar_2,l_bar_1,l_bar_2,l_bar_3]).transpose()
-
-#sigma acts as matrix in basis B on a vector v
-def act_vect(sig,v,B=identity_matrix(N)): return (B.inverse()*sig.matrix()*B)*v
+B=matrix([h1,h2,l1,l2,l3,v_b]).transpose()
+O=matrix([h_bar_1,h_bar_2,l_bar_1,l_bar_2,l_bar_3,v_o]).transpose()
 
 #matrix representation of perm. sig in given basis
 def mat_rep(sig,B=identity_matrix(N)): return B.inverse()*sig.matrix()*B
