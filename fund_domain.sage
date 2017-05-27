@@ -25,12 +25,12 @@ def fund_domain(l=[i for i in range(N)],B=identity_matrix(N),br=QQ):
 	#augmented matrix for half-plane ineqs
 	A = [ [l[j] - act_vect(G[i],vector(l),B)[j] for j in range(N)] for i in range(G.order())]
 	b_1 = [0 for i in range(G.order())]
-	bA = matrix(QQ,b_1).transpose().augment(matrix(QQ,A))
+	bA = matrix(br,b_1).transpose().augment(matrix(br,A))
 
 	#augmented matrix for positivity ineqs
 	pos = B.inverse().transpose()
 	b_2 = [0 for i in range(N)]
-	bPos = matrix(QQ,b_2).transpose().augment(pos)
+	bPos = matrix(br,b_2).transpose().augment(pos)
 
 	#augmented matrix for fund. domain
 	aug_l = bA.stack(bPos)
@@ -109,15 +109,20 @@ def compare_domains(F_1,F_2):
 	
 	#number of planes in H-rep
 	print('#H-rep: \n #F_1=%r \n #F_2=%r' % (F_1.n_Hrepresentation(),F_2.n_Hrepresentation()))
-
-#return orbit rep of x lying in F
-def fund_domain_rep(x, F):
-	orb = [act_vect(g,vector(x)) for g in G]
-	for gx in orb:
-		if F.contains(gx): return gx.list()
-
-#compute procrustean distance between two networks s1, s2
-def proc_dist(s1,s2): return min([(vector(act_vect(g,vector(s2)))-vector(s1)).norm() for g in G])		
+	
+#compute gradient matrix for \Sigma_n -> \Sigma_N
+def grad_mat():
+	A=[[0 for j in range(N)] for i in range(N)]
+	
+	for i in range(1,N+1):
+		for j in range(1,N+1):
+			num = 0
+			for k in range(H.order()): 
+				if H[k](j)==i: num += 1
+			A[i-1][j-1] = num
+	
+	return A
+			
 
 #extract info from decomp vector
 def dim_vector(decomp): return sorted([R[0].dim() for R in decomp])
