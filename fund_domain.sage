@@ -112,20 +112,13 @@ def compare_domains(F_1,F_2):
 	
 	#number of planes in H-rep
 	print('#H-rep: \n #F_1=%r \n #F_2=%r' % (F_1.n_Hrepresentation(),F_2.n_Hrepresentation()))
-	
-#compute gradient matrix for \Sigma_n -> \Sigma_N
-def grad_mat():
-	A=[[0 for j in range(N)] for i in range(N)]
-	
-	for i in range(1,N+1):
-		for j in range(1,N+1):
-			num = 0
-			for k in range(H.order()): 
-				if H[k](j)==i: num += 1
-			A[i-1][j-1] = num
-	
-	return A
 			
+#return orbit rep of x lying in F
+def fund_domain_rep(x, F):
+	orb = [act_vect(g,vector(x)) for g in G]
+	for gx in orb:
+		if F.contains(gx): return gx.list()
+
 
 #extract info from decomp vector
 def dim_vector(decomp): return sorted([R[0].dim() for R in decomp])
