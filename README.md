@@ -34,7 +34,7 @@ The global variable N = n choose 2. The global variable G=\Sigma_n will then be 
 
 F=fund_domain([1,2,3,4,5,6.1])[1]; F
 
-F is a Sage polyhedron object representing a fundamental Dirichlet domain (if l is a distinct vector). Refer to the Sage documentation for the many available options for handling polyhedra:
+F is a Sage polyhedron object representing a fundamental Dirichlet domain. Refer to the Sage documentation for the many available options for handling polyhedra:
 
 http://doc.sagemath.org/html/en/reference/geometry/sage/geometry/polyhedron/constructor.html
 
