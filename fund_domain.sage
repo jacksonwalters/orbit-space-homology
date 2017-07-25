@@ -115,9 +115,45 @@ def compare_domains(F_1,F_2):
 			
 #return orbit rep of x lying in F
 def fund_domain_rep(x, F):
-	orb = [act_vect(g,vector(x)) for g in G]
-	for gx in orb:
+	for gx in orb(x):
 		if F.contains(gx): return gx.list()
+
+def orb(x): return list(set([tuple(act_vect(g,vector(x))) for g in G]))
+
+def stab_size(x): return factorial(n)/len(orb(x))
+
+def int_point(poly): 
+	if poly.dimension() == 0: p = vector(poly.vertices()[0])
+	else: p=sum(vector(ray) for ray in poly.rays())
+	#check
+	if poly.relative_interior_contains(p): return p
+	else: return "Failed."
+	
+def check_gluings(F):
+	#loop over faces of each dim. k
+	for k in range(N+1):
+		for f in F.faces(k):
+			#choose arbitrary interior point of face
+			p = int_point(f.as_polyhedron())
+			orbit = orb(p)
+			orbit.remove(tuple(p))
+			for o in orbit:
+				if F.contains(o): return [o,k]
+	return "No gluings."
+
+def orb_euler_char(F):
+	#initialize alternating sum
+	alt_sum = 0
+	#loop over faces of each dim. k
+	for k in range(N+1):
+		for f in F.faces(k):
+			#convert face to polyhedron object
+			f_poly = f.as_polyhedron()
+			#choose arbitrary interior point of face
+			p = int_point(f_poly)
+			#add summand
+			alt_sum += (-1)^k*(1/stab_size(p))
+	return alt_sum
 
 
 #extract info from decomp vector
