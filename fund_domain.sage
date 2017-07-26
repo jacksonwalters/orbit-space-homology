@@ -112,41 +112,61 @@ def compare_domains(F_1,F_2):
 	
 	#number of planes in H-rep
 	print('#H-rep: \n #F_1=%r \n #F_2=%r' % (F_1.n_Hrepresentation(),F_2.n_Hrepresentation()))
-			
+
+#orbit of point x under grounp action			
+def orb(x): return list(set([tuple(act_vect(g,vector(x))) for g in G]))
+
 #return orbit rep of x lying in F
 def fund_domain_rep(x, F):
 	for gx in orb(x):
 		if F.contains(gx): return gx.list()
 
-def orb(x): return list(set([tuple(act_vect(g,vector(x))) for g in G]))
-
+#size of stabilizer of point x
 def stab_size(x): return factorial(n)/len(orb(x))
 
+#returns interior point of polyhedron = average of vertices and rays 
+#whose convex hull is polyhedron
 def int_point(poly): 
-	if poly.dimension() == 0: p = vector(poly.vertices()[0])
-	else: p=sum(vector(ray) for ray in poly.rays())
+	vert_rays = poly.vertices_list()+poly.rays_list()
+	p = (1/len(vert_rays))*sum(vector(vr) for vr in vert_rays)
 	#check
 	if poly.relative_interior_contains(p): return p
 	else: return "Failed."
-	
-def check_gluings(F):
-	#loop over faces of each dim. k
-	for k in range(N+1):
-		for f in F.faces(k):
-			#choose arbitrary interior point of face
-			p = int_point(f.as_polyhedron())
-			orbit = orb(p)
-			orbit.remove(tuple(p))
-			for o in orbit:
-				if F.contains(o): return [o,k]
-	return "No gluings."
 
+#check if two faces of a polyhedron are glued together by group action
+def faces_glued(f1,f2):
+	p1 = int_point(f1.as_polyhedron())
+	poly2 = f2.as_polyhedron()
+	for o1 in orb(p1):
+		if poly2.relative_interior_contains(o1): return True
+	return False
+	
+#return list of lists of k-dim faces of polyhedron F after accounting for gluing by group
+#action
+def glued_face_lattice(F):
+	glued_face_lat = []
+	for k in range(N+1):
+		new_k_faces = []
+		#faces which are glued are considered duplicate
+		for face in F.faces(k):
+			#check if face is already in new_k_faces
+			contains_face = False
+			for new_face in new_k_faces: 
+				if(faces_glued(face,new_face)): contains_face = True
+			if not contains_face: new_k_faces.append(face)
+		glued_face_lat.append(new_k_faces)
+	return glued_face_lat
+
+#returns orbifold Euler characteristic given fundamental domain F for orbifold X/G.
+#takes into account glued faces as to not include extra terms in alternating sum.
 def orb_euler_char(F):
+	#use face lattice which removes duplicate/glued faces
+	glued_face_lat = glued_face_lattice(F)
 	#initialize alternating sum
 	alt_sum = 0
 	#loop over faces of each dim. k
 	for k in range(N+1):
-		for f in F.faces(k):
+		for f in glued_face_lat[k]:
 			#convert face to polyhedron object
 			f_poly = f.as_polyhedron()
 			#choose arbitrary interior point of face
