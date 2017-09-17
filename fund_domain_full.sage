@@ -21,6 +21,7 @@ def perm_from_sort(L): return Permutation([pair[0] for pair in sorted(enumerate(
 def embed_gens(n): return [embed(gen,n) for gen in SymmetricGroup(n).gens()]
 
 G = PermutationGroup(embed_gens(n))
+#G = PermutationGroup(['(1,2,3)','(1,2)'])
 
 #fundamental domain given arbitrary distinct vector l and basis B
 def fund_domain(l=[i for i in range(N)],B=identity_matrix(N),br=QQ):
@@ -69,7 +70,7 @@ def fund_domain_rep(x, F):
 		if F.contains(gx): return gx.list()
 
 #size of stabilizer of point x
-def stab_size(x): return factorial(n)/len(orb(x))
+def stab_size(x): return G.order()/len(orb(x))
 
 #returns interior point of polyhedron = average of vertices and rays 
 #whose convex hull is polyhedron
@@ -81,20 +82,38 @@ def int_point(poly):
 	else: return "Failed."
 
 #check if two faces of a polyhedron are glued together by group action
-def faces_glued(f1,f2):
-	p1 = int_point(f1.as_polyhedron())
-	poly2 = f2.as_polyhedron()
-	for o1 in orb(p1):
-		if poly2.relative_interior_contains(o1): return True
-	return False
+#def faces_glued(f1,f2):
+#	p1 = int_point(f1.as_polyhedron())
+#	poly2 = f2.as_polyhedron()
+#	for o1 in orb(p1):
+#		if poly2.relative_interior_contains(o1): return True
+#	return False
 
 #group element which glues face f1 to face f2
-def gluing_elmt(f1,f2):
-	p1 = int_point(f1.as_polyhedron())
-	poly2 = f2.as_polyhedron()
-	for g in G:
-		if poly2.relative_interior_contains(act_vect(g,vector(p1))): return g
+#def gluing_elmt(f1,f2):
+#	p1 = int_point(f1.as_polyhedron())
+#	poly2 = f2.as_polyhedron()
+#	for g in G:
+#		if poly2.relative_interior_contains(act_vect(g,vector(p1))): return g
 	
+def faces_glued(f1,f2):
+	poly1 = f1.as_polyhedron()
+	poly2 = f2.as_polyhedron()
+	vr2 = [tuple(v) for v in poly2.rays()+poly2.vertices()]
+	for g in G:
+		act1 = [tuple(act_vect(g,vector(v))) for v in poly1.rays()+poly1.vertices()]
+		if set(act1) == set(vr2): return True
+	return False
+
+def gluing_elmt(f1,f2):
+	poly1 = f1.as_polyhedron()
+	poly2 = f2.as_polyhedron()
+	vr2 = [tuple(v) for v in poly2.rays()+poly2.vertices()]
+	elmts = []
+	for g in G:
+		act1 = [tuple(act_vect(g,vector(v))) for v in poly1.rays()+poly1.vertices()]
+		if set(act1) == set(vr2): elmts.append(g)
+	return elmts
 	
 #return list of lists of k-dim faces of polyhedron F after accounting for gluing by group
 #action
@@ -119,14 +138,12 @@ def glued_face_poset(F):
 
 #returns orbifold Euler characteristic given fundamental domain F for orbifold X/G.
 #takes into account glued faces as to not include extra terms in alternating sum.
-def orb_euler_char(F):
-	#use face lattice which removes duplicate/glued faces
-	glued_face_lat = glued_face_lattice(F)
+def orb_euler_char(glued_lat):
 	#initialize alternating sum
 	alt_sum = 0
 	#loop over faces of each dim. k
-	for k in range(N+1):
-		for f in glued_face_lat[k]:
+	for k in range(len(glued_lat)):
+		for f in glued_lat[k]:
 			#convert face to polyhedron object
 			f_poly = f.as_polyhedron()
 			#choose arbitrary interior point of face
@@ -151,15 +168,18 @@ def outward_normal(bndry_face,face):
 	#construct vector space containing bndry_face
 	V_bndry=containing_vs(bndry_face)
 	
-	#construct normal vector n as orthogonal complement of V_bndry in V_face
+	#construct unit normal vector n as orthogonal complement of V_bndry in V_face
 	n=V_bndry.basis_matrix().right_kernel().intersection(V_face).basis()[0]
 	
 	#choose outward pointing normal
+	eps=10^(-32)
 	p=int_point(bndry_face.as_polyhedron())
-	s_plus=p + (10^-7)*n
-	s_minus=p - (10^-7)*n
-	if face.as_polyhedron().contains(s_plus): return -n
-	if face.as_polyhedron().contains(s_minus): return n
+	s_plus= p + eps*n
+	s_minus= p - eps*n
+	if face.as_polyhedron().relative_interior_contains(s_plus): return -n
+	if face.as_polyhedron().relative_interior_contains(s_minus): return n
+	
+	print 'Could not find outward pointing normal vector.'
 
 #returns the induced orientation of bndry_face in face using an
 #outward pointing normal vector wrt face
@@ -170,37 +190,48 @@ def induced_orient(bndry_face,face):
 	V_bndry=containing_vs(bndry_face)
 	n=outward_normal(bndry_face,face)
 	bndry_basis=V_bndry.basis()
-	coord_vecs = [V_face.coordinate_vector(b) for b in bndry_basis] + [V_face.coordinate_vector(n)]
 	
+	coord_vecs = [V_face.coordinate_vector(n)]+[V_face.coordinate_vector(b) for b in bndry_basis]
 	if matrix(coord_vecs).det() > 0: 
 		if len(bndry_basis)==0: orient_basis = 1
 		else: orient_basis = bndry_basis
 	if matrix(coord_vecs).det() < 0: 
 		if len(bndry_basis)==0: orient_basis = -1
-		else: orient_basis = [-bndry_basis[0]] + [bndry_basis[i] for i in range(1,len(bndry_basis))]
+		else: 
+			orient_basis = [-bndry_basis[0]] + [bndry_basis[i] for i in range(1,len(bndry_basis))]
 	
 	return orient_basis
 
 #returns boundary of polyhedron face inside F
-def bndry(face,glued_lat):
+def bndry(face,glued_lat,F):
 	k=face.dim()
-	face_bndry=face.as_polyhedron().faces(k-1)
+	
+	face_bndry=[]
+	for t in face.as_polyhedron().faces(k-1):
+		for s in F.faces(k-1):
+			if t.as_polyhedron()==s.as_polyhedron():
+				face_bndry.append(s)
 	
 	bndry_vec=[0]*len(glued_lat[k-1])
 	for f in face_bndry:
 		for g in glued_lat[k-1]:
 			if faces_glued(f,g):
-				#hyperplane containing glued face g, use as reference
+				#tangent space to glued face g, use as reference
 				V_g = containing_vs(g)
+				#tangent space to face f
 				V_f = containing_vs(f)
 				
 				#check if gluing is orientation preserving or reversing
-				#by mapping the arbitrary basis assigned to g to the arbitrary
-				#basis assigned to f
+				#by mapping the arbitrary basis assigned to f to the arbitrary
+				#basis assigned to g
+				#THIS SIGN DEPENDS ON CHOICE OF SIGMA
 				sigma=gluing_elmt(f,g)
-				glued_basis = [act_vect(sigma,v) for v in V_f.basis()]
-				glued_coord = [V_g.coordinate_vector(b) for b in glued_basis]
-				orient_pres = sign(matrix(glued_coord).det())
+				print '-------------------'
+				for sig in sigma:
+					glued_basis = [act_vect(sig,v) for v in V_f.basis()]
+					glued_coord = [V_g.coordinate_vector(b) for b in glued_basis]
+					orient_pres = sign(matrix(glued_coord).det())
+					print orient_pres
 				
 				#check whether the induced orientation of f matches the arbitrary
 				#orientation assigned to f. dimension 0 is a special case.
@@ -210,27 +241,25 @@ def bndry(face,glued_lat):
 				else: 
 					f_coord = [V_f.coordinate_vector(b) for b in induced_f_orient]
 					induced_match = sign(matrix(f_coord).det())
-					
 				
 				#update the number of times the glued face g occurs in the boundary
 				#accounting for signs
 				indx = glued_lat[k-1].index(g)
 				bndry_vec[indx] += orient_pres*induced_match
-				#bndry_vec[indx] += 1
 	
 	return bndry_vec
 	
 #boundary map
-def	bndry_map(k,glued_lat): return matrix(ZZ,[bndry(f,glued_lat) for f in glued_lat[k]]).transpose()
+def	bndry_map(k,glued_lat,F): return matrix(ZZ,[bndry(f,glued_lat,F) for f in glued_lat[k]]).transpose()
 
 #cellular homology complex
-def cell_chain_cmplx(glued_lat): return ChainComplex({k:bndry_map(k,glued_lat) for k in range(1,len(glued_lat))},degree=-1)
+def cell_chain_cmplx(glued_lat,F): return ChainComplex({k:bndry_map(k,glued_lat,F) for k in range(1,len(glued_lat))},degree=-1)
 
 #boundary map in Z/2Z
-def	mod2_bndry_map(k,glued_lat): return matrix(Integers(2),[bndry(f,glued_lat) for f in glued_lat[k]]).transpose()
+def	mod2_bndry_map(k,glued_lat,F): return matrix(Integers(2),[bndry(f,glued_lat,F) for f in glued_lat[k]]).transpose()
 
 #cellular homology in Z/2Z
-def mod2_cell_chain_cmplx(glued_lat): return ChainComplex({k:mod2_bndry_map(k,glued_lat) for k in range(1,N+1)},degree=-1)
+def mod2_cell_chain_cmplx(glued_lat,F): return ChainComplex({k:mod2_bndry_map(k,glued_lat,F) for k in range(1,len(glued_lat))},degree=-1)
 	
 
 	
