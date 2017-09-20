@@ -223,15 +223,17 @@ def bndry(face,glued_lat,F):
 				
 				#check if gluing is orientation preserving or reversing
 				#by mapping the arbitrary basis assigned to f to the arbitrary
-				#basis assigned to g
-				#THIS SIGN DEPENDS ON CHOICE OF SIGMA
+				#basis assigned to g. need to do this for each \sigma that maps
+				#f to g. there are #stab([f]) of these elements. we then divide out
+				#by this number to 'average' in the 'orbifold' sense
 				sigma=gluing_elmt(f,g)
-				print '-------------------'
+				orient_pres = 0
 				for sig in sigma:
 					glued_basis = [act_vect(sig,v) for v in V_f.basis()]
 					glued_coord = [V_g.coordinate_vector(b) for b in glued_basis]
-					orient_pres = sign(matrix(glued_coord).det())
-					print orient_pres
+					orient_pres += sign(matrix(glued_coord).det())
+				orient_pres = orient_pres/len(sigma)
+					
 				
 				#check whether the induced orientation of f matches the arbitrary
 				#orientation assigned to f. dimension 0 is a special case.
