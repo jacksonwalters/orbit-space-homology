@@ -202,22 +202,17 @@ def induced_orient(bndry_face,face):
 			orient_basis = [-bndry_basis[0]] + [bndry_basis[i] for i in range(1,len(bndry_basis))]
 	
 	return orient_basis
-	
-#compute boundary of a face before gluing
-def bndry_up(face,F):
-	face_bndry=[]
-	for t in face.as_polyhedron().faces(k-1):
-		for s in F.faces(k-1):
-			if t.as_polyhedron()==s.as_polyhedron():
-				face_bndry.append(s)
-	return face_bndry
 
 #returns boundary of polyhedron face inside F
 def bndry(face,glued_lat,F):
 	k=face.dim()
 	
 	#compute boundary of face before gluing
-	face_bndry=bndry_up(face,F)
+	face_bndry=[]
+	for t in face.as_polyhedron().faces(k-1):
+		for s in F.faces(k-1):
+			if t.as_polyhedron()==s.as_polyhedron():
+				face_bndry.append(s)
 	
 	bndry_vec=[0]*len(glued_lat[k-1])
 	for f in face_bndry:
