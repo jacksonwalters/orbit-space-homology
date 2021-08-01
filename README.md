@@ -1,5 +1,7 @@
-# fund-domain-networks
-Sage code for computing Dirichlet fundamental domains and the empirical Frechet mean set for the space of unlabeled networks on n vertices. 
+# orbit-space-homology
+Given a convex polyhedral space X and a finite linear group G, compute the (simplicial) homology of the orbit space X/G. Computes a Dirichlet fundamental domain and refines triangulation by including extra vertices which are fixed by the action of G. 
+
+This code was originally written for the case of unlabled networks with non-negative, real edge weights where X=(R_+)^N, N = n choose 2 = #edges, G=\Sigma_n \subset \Sigma_N, the edge permutations induced by permuting vertices. 
 
 REQUIRED SOFTWARE:
 
