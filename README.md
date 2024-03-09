@@ -40,6 +40,6 @@ $F$ is a Sage polyhedron object representing a fundamental Dirichlet domain. Ref
 
 http://doc.sagemath.org/html/en/reference/geometry/sage/geometry/polyhedron/constructor.html
 
-To compute the cohomology, run the rest of the notebook. It will compute the $k$-faces for each $k$ from $1,\dots,N$ (very slow for $N \ge 6$). It will then assemble the boundary maps, and build the chain complex. The homology is $\ker(\del_{k})/\im(\del_{k+1})$.
+To compute the cohomology, run the rest of the notebook. It will compute the $k$-faces for each $k$ from $1,\dots,N$ (very slow for $N \ge 6$). It will then assemble the boundary maps, and build the chain complex. The homology is $\text{ker}(\partial_{k})/\text{im}(\partial_{k+1})$.
 
 G-CW complexes: https://math.mit.edu/research/undergraduate/urop-plus/documents/2016/Liu.pdf
