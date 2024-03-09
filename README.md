@@ -43,7 +43,16 @@ http://doc.sagemath.org/html/en/reference/geometry/sage/geometry/polyhedron/cons
 To compute the cohomology, run the rest of the notebook. It will compute the $k$-faces for each $k$ from $1,\dots,N$ (very slow for $N \ge 6$). It will then assemble the boundary maps, and build the chain complex. The homology is $\text{im}(\partial_{k+1})/\text{ker}(\partial_{k})$. To compute the homology, compute the vertices, the glued faces, the boundary maps, the chain complex, and the homology:
 
 ```
-#compute the glued faces
+#compute a cross section of the fundamental domain (sum of components is constant)
+F2=cross_section(F[1])
+#compute vertices fixed by G action
+vertices=fixed_verts(F2,QQ); vertices
+#compute glued 0-faces
+zero_faces=glued_faces(0); zero_faces
+#compute glued 1-faces
+one_faces=glued_faces(1); one_faces
+...
+#list of all glued face
 glued_face_list=[zero_faces,one_faces,two_faces,…]
 #form the chain complex with truncation at degree 2
 #computes each boundary map
