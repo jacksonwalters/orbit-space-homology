@@ -34,7 +34,7 @@ n = your desired number of vertices
 
 The global variable $N = \binom{n}{2}$. The global variable $G=\Sigma_n$ will then be computed as a subgroup of the permutation group $\Sigma_N$. To construct a fundamental domain (for $n=4$, $N=6$) centered at the distinct vector $l=[1,2,3,4,5,6.1]$, simply enter
 
-$$F=\text{fund_domain}([1,2,3,4,5,6.1])[1]; F$$
+```F=\text{fund_domain}([1,2,3,4,5,6.1])[1]; F```
 
 $F$ is a Sage polyhedron object representing a fundamental Dirichlet domain. Refer to the Sage documentation for the many available options for handling polyhedra:
 
