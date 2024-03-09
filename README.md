@@ -26,7 +26,7 @@ RUNTIME:
 
 To get started, open
 
-orbit_space_simplicial_homology.ipynb
+```orbit_space_simplicial_homology.ipynb```
 
 in the Sage environment, i.e. a Jupyter notebook with the Sage kernel. You will receive a prompt to set the global variable
 
