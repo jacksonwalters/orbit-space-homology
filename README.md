@@ -17,7 +17,7 @@ You will need to install and configure the latest version of SageMath, available
 The Polyhedra functions in Sage are able to make use of the following optional Sage package 'lrslib'.
 This is most easily installed within Sage using the following terminal command: 
 
-sage -i lrslib
+```sage -i lrslib```
 
 Using this optional package will increase the speed these computations immensely, very roughly by a factor
 of 10.
@@ -30,7 +30,7 @@ To get started, open
 
 in the Sage environment, i.e. a Jupyter notebook with the Sage kernel. You will receive a prompt to set the global variable
 
-n = your desired number of vertices
+```n = "your desired number of vertices"```
 
 The global variable $N = \binom{n}{2}$. The global variable $G=\Sigma_n$ will then be computed as a subgroup of the permutation group $\Sigma_N$. To construct a fundamental domain (for $n=4$, $N=6$) centered at the distinct vector $l=[1,2,3,4,5,6.1]$, simply enter
 
