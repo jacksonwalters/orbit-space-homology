@@ -3,13 +3,18 @@ Given a convex polyhedral space X and a finite linear group G, computes the (sim
 
 This code was originally written for the case of unlabled networks with non-negative, real edge weights where $X=\mathbb{R}_{\ge 0}^N$, $N = \binom{n}{2}$ = #edges, $G=\Sigma_n \subset \Sigma_N$, the edge permutations induced by permuting vertices. 
 
-REQUIRED SOFTWARE:
+## References
 
-Sage - http://www.sagemath.org/
+- G-CW complexes: https://math.mit.edu/research/undergraduate/urop-plus/documents/2016/Liu.pdf
 
-lrslib - http://cgm.cs.mcgill.ca/~avis/C/lrs.html
+## Dependencies
 
-SETUP:
+- `Sage`: http://www.sagemath.org/
+- `lrslib`: http://cgm.cs.mcgill.ca/~avis/C/lrs.html
+
+SageMath is a computer algebra system. `lrslib` is a backend for performing the polyhedron computations.
+
+## Instructions
 
 This code is written in Python for the SageMath software system. 
 You will need to install and configure the latest version of SageMath, available at http://www.sagemath.org/.
@@ -22,7 +27,7 @@ This is most easily installed within Sage using the following terminal command:
 Using this optional package will increase the speed these computations immensely, very roughly by a factor
 of 10.
 
-RUNTIME:
+## Runtime
 
 To get started, open
 
@@ -60,5 +65,3 @@ cc = chain_complex(max_degree=2)
 #compute the homology of the chain complex
 cc.homology()
 ```
-
-G-CW complexes: https://math.mit.edu/research/undergraduate/urop-plus/documents/2016/Liu.pdf
